@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>JenTube Reader</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+
+	<link href="https://use.fontawesome.com/releases/v5.0.2/css/all.css" rel="stylesheet"> <!--for the icons-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
+	<script src="myjs.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+	<script>moment().format();</script>
+	<script src="src/FileSaver.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/TableExport/4.0.11/js/tableexport.min.js"></script> <!-- https://tableexport.v4.travismclarke.com/ -->
+	<link rel="stylesheet" .sticky-toptype="text/css" href="mystyle.css">
+	<style>
+
+</style>
+</head>
+<body>
+	<!-- Navbar  -->
+	<nav class="navbar navbar-expand-md navbar-dark">
+		<a class="navbar-brand" href="index.html">
+			<img src="img/jentube-reader-white-transparent-lg.png" width="200" height="60" alt="JenTube Reader">
+		</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#myNavbar" aria-controls="myNavbar" aria-expanded="false" aria-label="Toggle navigation" style="border-width: 2px;" id="navbar-toggle">
+			<i class="fas fa-chevron-down"></i>
+		</button>
+
+		<div class="collapse navbar-collapse justify-content-end" id="myNavbar">
+			<ul class="navbar-nav">
+				<li class="nav-item active" id="CurrentExperimentButton"> 
+					<a class="nav-link"><i class="fas fa-sticky-note"></i> Current Experiment <span class="sr-only">(current)</span></a>
+				</li>
+				<li class="nav-item" id="PastExperimentsButton">
+					<a class="nav-link"><i class="fas fa-history"></i> Past Experiments <span class="sr-only">(current)</span></a>
+				</li>
+				<li class="nav-item" id="AlertSettingsButton">
+					<a class="nav-link"><i class="fas fa-bell"></i> Alert Settings <span class="sr-only">(current)</span></a>
+				</li>
+
+			</ul>
+		</div>
+	</nav>
+	<!-- End Navbar  -->
+	<!-- Current Experiment Page  -->
+	<div id="CurrentExperiment">
+		<div class="d-flex justify-content-center text-center">
+			<div class="container-main d-flex flex-column">
+				<!-- Test Tube Box  -->
+				<div class="card" style="max-width: 50rem;"">
+					<h5 class="card-header text-center">
+						<i class="fas fa-angle-right" id="experimentIcon"></i> Experiment: 
+						<I><span id="experimentName">New Run 1</span></I>
+					</h5>
+
+					<div class="card-body">
+						<div class="d-flex flex-row mr-auto justify-content-around">
+							<div class="testtube align-self-center" data-target="#tube1" id="tube1">
+								<b>1</b>
+								<div class="optical-density-box" id="tube1box">
+									<br>Optical Density
+									<br><h5 id="od1">0.45</h5>
+									<br>
+								</div>
+							</div>
+							<div class="testtube align-self-center" data-target="#tube2" id="tube2">
+								<b>2</b>
+								<div class="optical-density-box" id="tube2box">
+									<br>Optical Density
+									<br><h5 id="od2">0.32</h5>
+									<br>
+								</div>
+							</div>
+							<div class="testtube align-self-center" data-target="#tube3" id="tube3">
+								<b>3</b>
+								<div class="optical-density-box" id="tube3box">
+									<br>Optical Density
+									<br><h5 id="od3">0.10</h5>
+									<br>
+								</div>
+							</div>
+							<div class="testtube align-self-center" data-target="#tube4" id="tube4">
+								<b>4</b>
+								<div class="optical-density-box" id="tube4box">
+									<br>Optical Density
+									<br><h5 id="od4">N/A</h5>
+									<br>
+								</div>
+								<!-- <span class="testtube-rotatedtext">NOT READING</span> -->
+							</div>
+						</div>
+						<div style="padding-top: 25px;">
+							<button id="QuickReadButton" class="btn btn-primary">Quick Read</button>
+						</div>
+					</div>
+					<h7 class="card-footer text-muted">
+						Last run: 
+						<span id="LastRun">no runs yet</span>
+					</h7>
+				</div>
+				<!-- End Test Tube Box  -->
+				<!-- Experiment Settings Box  -->
+				<div class="card d-flex justify-content-center text-center" style="max-width: 50rem; margin-top: 20px"">
+					<h5 class="card-header text-center">
+						<span id="expTitle"><i class="fas fa-cog"></i> Experiment Settings</span>
+					</h5>
+
+					<div class="card-body" id="ExperimentSettingsCard">
+						<!-- Experiment Name Input -->
+						<div class="input-group mb-3">
+							<div class="input-group-prepend">
+								<span class="input-group-text" id="basic-addon1">Experiment Name</span>
+							</div>
+							<input type="text" class="form-control" placeholder="e.g. Run #1" aria-label="Run #1" aria-describedby="basic-addon1" id="experimentNameInput">
+							
+						</div>
+						<!-- End Experiment Name Input -->
+						<!-- Enable Tubes Toggle -->
+						<div class="input-group mb-3">
+							<div class="input-group-prepend">
+								<span class="input-group-text" id="basic-addon1">Tubes To Read</span>
+								<div class="toggle-box" >
+									<div class="form-check form-check-inline" style="margin-left: 10px;">
+										<input class="form-check-input" type="checkbox" id="inlineCheckboxTube1" value="option1">
+										<label class="form-check-label" for="inlineCheckboxTube1">Tube 1</label>
+									</div>
+									<div class="form-check form-check-inline">
+										<input class="form-check-input" type="checkbox" id="inlineCheckboxTube2" value="option2">
+										<label class="form-check-label" for="inlineCheckboxTube2">Tube 2</label>
+									</div>
+									<div class="form-check form-check-inline">
+										<input class="form-check-input" type="checkbox" id="inlineCheckboxTube3" value="option3">
+										<label class="form-check-label" for="inlineCheckboxTube3">Tube 3</label>
+									</div>
+									<div class="form-check form-check-inline">
+										<input class="form-check-input" type="checkbox" id="inlineCheckboxTube4" value="option4">
+										<label class="form-check-label" for="inlineCheckboxTube4">Tube 4</label>
+									</div>
+								</div>
+								
+							</div>
+						</div>
+						<!-- End Enable Tubes Toggle -->					
+						<p class="card-text" style="padding-top: 15px">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+						<button id="ApplySettingsButton" class="btn btn-primary">Apply Settings</button>
+						<div class="alert alert-success hidden" role="alert" id="ExperimentSettingsSaveAlert" style="padding: 4px; margin-top: 5px; font-size: .90em;">
+							<i class="fas fa-save"></i> Settings Applied!
+						</div>
+					</div>
+
+
+
+				</div>
+				<!-- End Experiment Settings Box  -->
+			</div>
+		</div>
+	</div>
+	<!-- End Current Experiment Page  -->
+	<!-- Past Experiments Page  -->
+	<div id="PastExperiments" class="hidden">
+
+		<div class="container-main d-flex justify-content-center text-center">
+			<!-- Table Box  -->
+			<div class="card">
+				<h5 class="card-header text-center">
+					<i class="fas fa-angle-right"></i> Experiment History <br>
+					<button id="ExportHistoryButton" class="btn btn-primary"><i class="fas fa-file-alt"></i> Export as CSV</button>
+					<button type="button" id="DeleteHistoryButton" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal"><i class="fas fa-trash-alt"></i>
+						Delete History
+					</button>
+				</h5>
+				<div class="card-body">
+					<table class="table text-left" id="tableToExport">
+						<thead class="thead-default">
+							<tr>
+								<th>#</th>
+								<th>Experiment Name</th>
+								<th>Start Time</th>
+								<th>Tube 1</th>
+								<th>Tube 2</th>
+								<th>Tube 3</th>
+								<th>Tube 4</th>
+								<th>Type</th>
+								<th>Notes</th>
+							</tr>
+						</thead>
+						<tbody id="tableBody">
+							<!-- where data gets inserted -->
+						</tbody>
+					</table>
+					<div id="noDataInTable">No experiments yet.</div>
+				</div>
+			</div>
+			<!-- End Table Box  -->
+		</div>
+		<!-- Delete Modal  -->
+		<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Delete All Experiment History?</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						WARNING: THIS CANNOT BE UNDONE!<br>
+						Please confirm that you want to delete all experiment history.
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+						<button type="button" id="DeleteHistoryConfirmButton" class="btn btn-danger" data-dismiss="modal">Delete Data</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- End Delete Modal  -->
+	</div>
+	<!-- End Past Experiments Page  -->
+	<div id="AlertSettings" class="hidden">
+	</div>
+
+
+</body>
+</html>

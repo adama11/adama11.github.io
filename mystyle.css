@@ -1,0 +1,175 @@
+body {
+    
+}
+.color-orange {background-color: #f8c471;}
+.color-darkmint {background-color: #58D68D}
+.color-lightmint {background-color: #d5f5e3;}
+.color-darkblue {background-color: #34495e;}
+.color-medblue {background-color: #85c1e9;}
+.color-lightblue {background-color: #3498db;}
+
+.navbar {
+	margin-bottom: 0;
+	border-radius: 0;
+	background-color: #34495e;
+	color: #FFF;
+	padding: 5px 20px;
+	border: 0;
+
+}
+
+.navbar-brand {
+	float: left;
+	min-height: 60;
+}
+
+.container-main {
+	padding: 20px;
+}
+.hidden {
+	display: none;
+}
+
+.unhidden {
+	display:;
+}
+
+/*.navbar-nav .mr-auto .nav-item .active a, .navbar-nav .mr-auto .nav-item .active a:focus, .navbar-nav .mr-auto .nav-item .active a:hover {
+	color: #FFF;
+	background-color: #85c1e9;
+}*/
+.navbar-nav {
+	text-align: center;
+}
+
+.nav-item {
+	margin-right: 10px;
+}
+.navbar-nav .active, .navbar-nav .active:focus, .navbar-nav .active:hover {
+	background-color: #58D68D;
+	border-radius: 5px;
+}
+.collapse .navbar-collapse {
+	padding: 5px;
+}
+
+.rotateToggle {
+    transform: rotate( -180deg );            
+    transition: transform 150ms ease;
+}
+
+
+
+.btn-primary {
+	background-color: #34495e;
+	border-color:  #34495e;
+	margin: 5px;
+}
+
+.btn-primary:hover {
+	background-color: #58D68D !important;
+	border-color:  #58D68D !important
+}
+
+.btn-primary:active {
+	background-color: #d5f5e3 !important;
+	border-color:  #d5f5e3 !important;
+}
+
+
+.btn-secondary:hover {
+	background-color: #58D68D !important;
+	border-color:  #58D68D !important;
+}
+
+.btn-secondary:active {
+	background-color: #d5f5e3 !important;
+	border-color:  #d5f5e3 !important;
+}
+
+.toggle-box {
+	color: #485056;
+	padding: 5.5px 0;
+	border-width: 1px 1px 1px 0;
+	border-style: solid;
+	border-color: #cdd3da ;
+	border-top-right-radius: 4px;
+	border-bottom-right-radius: 4px;
+}
+
+
+
+
+/*.navbar-inverse .navbar-nav li a {
+	color: #d5f5e3;
+}*/
+
+.optical-density-box {
+	color: #f5f5f5;
+	font-style: bold;
+	background-color: #34495e;
+	border-radius: 2px;
+	padding: 2px;
+	line-height: 110%;
+	font-size: .5em
+}
+
+.od-box-inactive {
+	background-color: #d5d5d5;
+	color: #f5f5f5;
+}
+br {
+    display: block; /* makes it have a width */
+    content: ""; /* clears default height */
+    margin-top: 10px; /* change this to whatever height you want it */
+}
+
+.testtube {
+	width: 60px;
+	font-size: 1.5em;
+	text-align: center;
+    min-width: 40px;
+    height: 225px;
+    min-height: 150px;
+    background: #85c1e9;
+    border-style: solid;
+    border-width: 3px;
+    border-color: #34495e;
+    -moz-border-radius: 0px 0px 30px 30px;
+    -webkit-border-radius: 0px 0px 30px 30px;
+    border-radius: 0px 0px 30px 30px;
+    padding: 10px 2px;
+}
+
+.testtube-inactive {
+	color: #d5d5d5;
+	background: #f5f5f5;
+	border-color: #d5d5d5;
+}
+
+.testtube-rotatedtext {
+	/*position: absolute;*/
+	display: inline-block;
+	font-size: .75em;
+	transform: rotate(-90deg);
+
+	width: 200px;
+	/*text-align: center;*/
+}
+
+
+
+TableExport(document.getElementsByTagName("table"), {
+    headers: true,                              // (Boolean), display table headers (th or td elements) in the <thead>, (default: true)
+    footers: true,                              // (Boolean), display table footers (th or td elements) in the <tfoot>, (default: false)
+    formats: ['xls', 'csv', 'txt'],             // (String[]), filetype(s) for the export, (default: ['xls', 'csv', 'txt'])
+    filename: 'id',                             // (id, String), filename for the downloaded file, (default: 'id')
+    bootstrap: false,                           // (Boolean), style buttons using bootstrap, (default: true)
+    exportButtons: true,                        // (Boolean), automatically generate the built-in export buttons for each of the specified formats (default: true)
+    position: 'bottom',                         // (top, bottom), position of the caption element relative to table, (default: 'bottom')
+    ignoreRows: null,                           // (Number, Number[]), row indices to exclude from the exported file(s) (default: null)
+    ignoreCols: null,                           // (Number, Number[]), column indices to exclude from the exported file(s) (default: null)
+    trimWhitespace: true                        // (Boolean), remove all leading/trailing newlines, spaces, and tabs from cell text in the exported file(s) (default: false)
+});
+
+}
