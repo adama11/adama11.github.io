@@ -128,12 +128,13 @@ jQuery(document).ready(function($){
 		var experiment = new Object();
 		experiment.name = ($("#experimentNameInput").val() == '') ? ("New Run " + experimentCount) : expName;
 		experiment.startTime = moment().format("MM/DD/YY, h:mm:ssA");
-		experiment.tube1 = tube1Enable; //Import data from Arduino
-		experiment.tube2 = tube2Enable; //Import data from Arduino
-		experiment.tube3 = tube3Enable; //Import data from Arduino
-		experiment.tube4 = tube4Enable; //Import data from Arduino
+		experiment.startTimeUnformatted = moment().unix();
+		experiment.tube1 = Math.floor(Math.random() * 100)/100; //Import data from Arduino
+		experiment.tube2 = Math.floor(Math.random() * 100)/100; //Import data from Arduino
+		experiment.tube3 = Math.floor(Math.random() * 100)/100; //Import data from Arduino
+		experiment.tube4 = Math.floor(Math.random() * 100)/100; //Import data from Arduino
 		experiment.type = "Quick Read";
-		experiment.notes = "";
+		experiment.notes = "blah blah blah";
 
 		var n = "exp" + experimentCount; //console.log("n=" + n);
 		if (localStorage != null) {
@@ -200,8 +201,8 @@ jQuery(document).ready(function($){
 	});
 	function updateLastRun () {
 		if (hasRun) {
-			var retrievedObject = localStorage.getItem("exp"+experimentCount);
-			var e = JSON.parse(retrievedObject);
+			// var retrievedObject = localStorage.getItem("exp"+experimentCount);
+			// var e = JSON.parse(retrievedObject);
 			$('#LastRun').text(moment(recentRun).fromNow());
 		};
 	};
@@ -222,31 +223,126 @@ jQuery(document).ready(function($){
 
 	// $('#GraphButton').on('click', graph);
 	// function graph(e) {
-		
+	// 	google.charts.load('current', {packages: ['corechart']});
+	// 	google.charts.setOnLoadCallback(drawChart);
+
+	// 	function drawChart() {
+	// 		// Define the chart to be drawn.
+	// 		var data = new google.visualization.DataTable();
+	// 		data.addColumn('number', 'time');
+	// 		data.addColumn('number', 'Optical Density tube 1');
+	// 		data.addColumn('number', 'Optical Density tube 2');
+	// 		data.addColumn('number', 'Optical Density tube 3');
+	// 		data.addColumn('number', 'Optical Density tube 4');
+
+	// 		var timeStart = 1000000000000;
+	// 		for (var i=1; i <= experimentCount; i++) {
+	// 			if ($("#graphCheckbox"+i).prop("checked")) {
+
+	// 				var retrievedObject = localStorage.getItem("exp"+i);
+	// 				var e = JSON.parse(retrievedObject);
+	// 				if (timeStart > e.startTimeUnformatted) { timeStart = e.startTimeUnformatted };
+
+	// 				data.addRows([[e.startTimeUnformatted - timeStart,e.tube1,e.tube2,e.tube3,e.tube4]]);
+
+	// 			};
+	// 		};
+
+	// 	var options = {
+	// 		'title':'Optical Density vs. Time',
+	// 		'width': 1000,
+	// 		'height':400
+	// 	};
+
+	//     // Instantiate and draw the chart.
+	//     var chart = new google.visualization.LineChart(document.getElementById('myPieChart'));
+	//     chart.draw(data, options);
+	// 	};
 
 
+	// };
 
-	// }
+	$('#GraphButton').on('click', graph);
+	function graph(e) {
+		//console.log(parseGraphData());
+		var data = { 
+			series: eval(parseGraphData()) 
+		};
 
-	
+		var options = {
+			axisX: {
+				type: Chartist.FixedScaleAxis,
+				divisor: 10,
+				labelInterpolationFnc: function(value) {
+					return moment(value).format('HH:MM:SSA');
+				}
+			}
+		,
+			plugins: [
+		    	Chartist.plugins.tooltip()
+		  	]
+
+		};
+
+		var chart = new Chartist.Line('.ct-chart', data, options);
+
+
+		// chart.on('draw', function(data) {
+		// 	if(data.type === 'line' || data.type === 'area') {
+		// 		data.element.animate({
+		// 			d: {
+		// 				begin: 200 * data.index,
+		// 				dur: 200,
+		// 				from: data.path.clone().scale(1, 0).translate(0, data.chartRect.height()).stringify(),
+		// 				to: data.path.clone().stringify(),
+		// 				easing: Chartist.Svg.Easing.easeOutQuint
+		// 			}
+		// 		});
+		// 	}
+		// });
+	};
+
+
+	var parseGraphData = function() {
+		var toAddData1 = "data: [";
+		var toAddData2 = "data: [";
+		var toAddData3 = "data: [";
+		var toAddData4 = "data: [";
+
+		var timeStart = +Infinity;
+		for (var i=1; i <= experimentCount; i++) {
+			if ($("#graphCheckbox"+i).prop("checked")) {
+				var retrievedObject = localStorage.getItem("exp"+i);
+				var e = JSON.parse(retrievedObject);
+				if (timeStart > e.startTimeUnformatted) { timeStart = e.startTimeUnformatted };
+			};
+		};
+
+		for (var i=1; i <= experimentCount; i++) {
+			if ($("#graphCheckbox"+i).prop("checked")) {
+				var retrievedObject = localStorage.getItem("exp"+i); //console.log("retrievedObject= " + localStorage.getItem("exp"+i));
+				var data = JSON.parse(retrievedObject);
+				toAddData1 += "{ meta: '" + data.notes + "' , x: " + (data.startTimeUnformatted - timeStart) + ", y: " + data.tube1 + "},";
+				toAddData2 += "{ meta: '" + data.notes + "' , x: " + (data.startTimeUnformatted - timeStart) + ", y: " + data.tube2 + "},";
+				toAddData3 += "{ meta: '" + data.notes + "' , x: " + (data.startTimeUnformatted - timeStart) + ", y: " + data.tube3 + "},";
+				toAddData4 += "{ meta: '" + data.notes + "' , x: " + (data.startTimeUnformatted - timeStart) + ", y: " + data.tube4 + "},";
+
+			};
+
+		};
+
+		var output = "[{ name: 'Tube 1'," + toAddData1 + 
+					"]}, { name: 'Tube 2'," + toAddData2 + 
+					"]}, { name: 'Tube 3'," + toAddData3 + 
+					"]}, { name: 'Tube 4'," + toAddData4 + 
+					"]}]";
+
+		return output;
+	};
 });
 
 
-var data = {
-	// A labels array that can contain any sort of values
-	labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
-	// Our series array that contains series objects or in this case series data arrays
-	series: [
-	[5, 2, 4, 2, 0]
-	]
-};
-
-// Create a new line chart object where as first parameter we pass in a selector
-// that is resolving to our chart container element. The Second parameter
-// is the actual data object.
-new Chartist.Line('.ct-chart', data);
 
 
 
 
-		
