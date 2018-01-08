@@ -2,10 +2,29 @@
 <html lang="en">
 <head>
 	<title>JenTube Reader</title>
+	<link rel="shortcut icon" href="/favicon.ico">
+	<link rel="icon" sizes="16x16 32x32 64x64" href="img/favicon.ico">
+	<link rel="icon" type="image/png" sizes="196x196" href="img/favicon-192.png">
+	<link rel="icon" type="image/png" sizes="160x160" href="img/favicon-160.png">
+	<link rel="icon" type="image/png" sizes="96x96" href="img/favicon-96.png">
+	<link rel="icon" type="image/png" sizes="64x64" href="img/favicon-64.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16.png">
+	<link rel="apple-touch-icon" href="img/favicon-57.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="img/favicon-114.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="img/favicon-72.png">
+	<link rel="apple-touch-icon" sizes="144x144" href="img/favicon-144.png">
+	<link rel="apple-touch-icon" sizes="60x60" href="img/favicon-60.png">
+	<link rel="apple-touch-icon" sizes="120x120" href="img/favicon-120.png">
+	<link rel="apple-touch-icon" sizes="76x76" href="/imgfavicon-76.png">
+	<link rel="apple-touch-icon" sizes="152x152" href="img/favicon-152.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="img/favicon-180.png">
+	<meta name="msapplication-TileColor" content="#FFFFFF">
+	<meta name="msapplication-TileImage" content="img/favicon-144.png">
+	<meta name="msapplication-config" content="img/browserconfig.xml">
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
-
 	<link href="https://use.fontawesome.com/releases/v5.0.2/css/all.css" rel="stylesheet"> <!--for the icons-->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
@@ -14,10 +33,11 @@
 	<script>moment().format();</script>
 	<script src="src/FileSaver.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/TableExport/4.0.11/js/tableexport.min.js"></script> <!-- https://tableexport.v4.travismclarke.com/ -->
+	<link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+    <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
 	<link rel="stylesheet" .sticky-toptype="text/css" href="mystyle.css">
 	<style>
-
-</style>
+</style>	
 </head>
 <body>
 	<!-- Navbar  -->
@@ -53,7 +73,7 @@
 				<div class="card" style="max-width: 50rem;"">
 					<h5 class="card-header text-center">
 						<i class="fas fa-angle-right" id="experimentIcon"></i> Experiment: 
-						<I><span id="experimentName">New Run 1</span></I>
+						<I><span id="experimentName"></span></I>
 					</h5>
 
 					<div class="card-body">
@@ -62,7 +82,7 @@
 								<b>1</b>
 								<div class="optical-density-box" id="tube1box">
 									<br>Optical Density
-									<br><h5 id="od1">0.45</h5>
+									<br><h5 id="od1">N/A</h5>
 									<br>
 								</div>
 							</div>
@@ -70,7 +90,7 @@
 								<b>2</b>
 								<div class="optical-density-box" id="tube2box">
 									<br>Optical Density
-									<br><h5 id="od2">0.32</h5>
+									<br><h5 id="od2">N/A</h5>
 									<br>
 								</div>
 							</div>
@@ -78,7 +98,7 @@
 								<b>3</b>
 								<div class="optical-density-box" id="tube3box">
 									<br>Optical Density
-									<br><h5 id="od3">0.10</h5>
+									<br><h5 id="od3">N/A</h5>
 									<br>
 								</div>
 							</div>
@@ -95,6 +115,7 @@
 						<div style="padding-top: 25px;">
 							<button id="QuickReadButton" class="btn btn-primary">Quick Read</button>
 						</div>
+						<div class="ct-chart ct-perfect-fourth"></div>
 					</div>
 					<h7 class="card-footer text-muted">
 						Last run: 
@@ -167,7 +188,8 @@
 			<div class="card">
 				<h5 class="card-header text-center">
 					<i class="fas fa-angle-right"></i> Experiment History <br>
-					<button id="ExportHistoryButton" class="btn btn-primary"><i class="fas fa-file-alt"></i> Export as CSV</button>
+					<button id="ExportHistoryButton" class="btn btn-primary"><i class="fas fa-file-alt"></i> Export as CSV</button> 
+					<button id="checkGraphButton" class="btn btn-primary"><i class="fas fa-file-alt"></i> Check Graph Checks</button>
 					<button type="button" id="DeleteHistoryButton" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal"><i class="fas fa-trash-alt"></i>
 						Delete History
 					</button>
@@ -177,6 +199,7 @@
 						<thead class="thead-default">
 							<tr>
 								<th>#</th>
+								<th><div style="text-align: center;"><i class="fas fa-chart-line"></i></div></th>
 								<th>Experiment Name</th>
 								<th>Start Time</th>
 								<th>Tube 1</th>
@@ -195,6 +218,16 @@
 				</div>
 			</div>
 			<!-- End Table Box  -->
+			<!-- Graph Box  -->
+			<div class="card">
+				<h5 class="card-header text-center">
+					<i class="fas fa-angle-right"></i> Graph <br>
+				</h5>
+				<div class="card-body" id="graphPlace">
+					<button type="button" id="GraphButton" class="btn btn-primary">Graph
+					</button>
+			</div>
+			<!-- End Graph Box  -->
 		</div>
 		<!-- Delete Modal  -->
 		<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">

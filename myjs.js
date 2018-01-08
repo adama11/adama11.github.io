@@ -35,14 +35,22 @@ jQuery(document).ready(function($){
 		$('.fas.fa-chevron-down').toggleClass('rotateToggle');
 	};
 
+	var experimentCount = 0;
+	if (localStorage != null) {
+		experimentCount = Number(localStorage.getItem("experimentCount", experimentCount));
+	}
+	localStorage.setItem("experimentCount", experimentCount);
 	var recentRun;
 	var hasRun = false;
-	var experimentCount = 0;
 	var tube1Enable = false;
 	var tube2Enable = false; 
 	var tube3Enable = false; 
 	var tube4Enable = false; 
-	var expName = "New Run " + 1;
+	//var expName = "New Run " + 1;
+
+
+	var tempN = experimentCount + 1;
+	$('#experimentName').text('New Run ' + tempN);
 
 	$('#ApplySettingsButton').on('click', saveConfig);
 	function saveConfig(e) {
@@ -51,7 +59,7 @@ jQuery(document).ready(function($){
 		$('#ExperimentSettingsSaveAlert').delay(2000).fadeOut(200);
 
 		expName = $("#experimentNameInput").val();
-		var tempN = experimentCount + 1;
+		tempN = experimentCount + 1;
 		if (expName == '') expName = "New Run " + tempN;
 		$('#experimentName').text(expName);
 
@@ -99,24 +107,26 @@ jQuery(document).ready(function($){
 			$('#od4').text("N/A");
 		}
 
-    };
+	};
 
-    $('#QuickReadButton').on('click', newRead);
-    function newRead(e) {
-    	hasRun=true;
-    	experimentCount++;
-    	recentRun=moment();
+	$('#QuickReadButton').on('click', newRead);
+	function newRead(e) {
+		hasRun=true;
+		experimentCount++;
+		localStorage.setItem("experimentCount", experimentCount);
+		recentRun=moment();
 
-    	expName = $("#experimentNameInput").val();
-    	var tempN = experimentCount;
-    	if (expName == '') expName = "New Run " + tempN;
-    	$('#experimentName').text(expName);
+
+		expName = $("#experimentNameInput").val();
+		var tempN = experimentCount + 1;
+		if (expName == '') expName = "New Run " + tempN;
+		$('#experimentName').text(expName);
 
 		document.getElementById("experimentIcon").className = "fas fa-sync fa-spin";
 
-		localStorage.setItem("experimentCount", experimentCount);
+		
 		var experiment = new Object();
-		experiment.name = expName;
+		experiment.name = ($("#experimentNameInput").val() == '') ? ("New Run " + experimentCount) : expName;
 		experiment.startTime = moment().format("MM/DD/YY, h:mm:ssA");
 		experiment.tube1 = tube1Enable; //Import data from Arduino
 		experiment.tube2 = tube2Enable; //Import data from Arduino
@@ -126,8 +136,9 @@ jQuery(document).ready(function($){
 		experiment.notes = "";
 
 		var n = "exp" + experimentCount; //console.log("n=" + n);
-		localStorage.setItem(n, JSON.stringify(experiment)); //console.log("stringify= " + JSON.stringify(experiment));
-
+		if (localStorage != null) {
+			localStorage.setItem(n, JSON.stringify(experiment)); //console.log("stringify= " + JSON.stringify(experiment));
+		};
 		
 		setTimeout(switchBack, 500);
 		function switchBack(e) {
@@ -145,6 +156,12 @@ jQuery(document).ready(function($){
 			$('#tableBody').append('\
 				<tr>\
 				<th scope="row">'+i+'</th>\
+				<td>\
+				<label class="custom-control custom-checkbox">\
+				<input type="checkbox" class="custom-control-input" id="graphCheckbox'+i+'">\
+				<span class="custom-control-indicator"></span>\
+				</label>\
+				</td>\
 				<td>'+e.name+'</td>\
 				<td>'+e.startTime+'</td>\
 				<td>'+ ((e.tube1) ? e.tube1 : 'N/A') +'</td>\
@@ -154,7 +171,17 @@ jQuery(document).ready(function($){
 				<td>'+e.type+'</td>\
 				<td>'+e.notes+'</td>\
 				</tr>');
+			//<input class="form-check-input" type="checkbox" id="graphCheckbox'+i+'" value="option1">
+		};
+		
+	};
 
+	$('#checkGraphButton').on('click', checkGraphChecks);
+	function checkGraphChecks(e) {
+		for (var i=1; i <= experimentCount; i++) {
+			if ($("#graphCheckbox"+i).prop("checked")) {
+				alert("graphCheckbox"+ i + " was checked");
+			};
 		};
 	};
 
@@ -163,6 +190,7 @@ jQuery(document).ready(function($){
 		$("#tableBody").empty();
 		localStorage.clear();
 		experimentCount=0;
+		localStorage.setItem("experimentCount", experimentCount);
 		$('#noDataInTable').text('No experiments yet.');
 		hasRun=false;
 	};
@@ -192,5 +220,33 @@ jQuery(document).ready(function($){
 
 	};
 
+	// $('#GraphButton').on('click', graph);
+	// function graph(e) {
+		
+
+
+
+	// }
+
 	
 });
+
+
+var data = {
+	// A labels array that can contain any sort of values
+	labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+	// Our series array that contains series objects or in this case series data arrays
+	series: [
+	[5, 2, 4, 2, 0]
+	]
+};
+
+// Create a new line chart object where as first parameter we pass in a selector
+// that is resolving to our chart container element. The Second parameter
+// is the actual data object.
+new Chartist.Line('.ct-chart', data);
+
+
+
+
+		
