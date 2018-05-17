@@ -1,0 +1,7 @@
+Calibrate (True/False), Blank (True/False), DelayStart (sec), ReadType (0 = single, 1 = multi), Run Time (hours), ReadInterval (min)
+F
+T
+0
+1
+0.5
+1
