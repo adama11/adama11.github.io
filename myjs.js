@@ -1,4 +1,27 @@
 jQuery(document).ready(function($){
+	//WEB USB IMPLEMENTATION (NOT WORKING)
+	// document.addEventListener('DOMContentLoaded', event => {
+	// 	const filters = [
+	//       { 'vendorId': 0x239a, 'productId': 0x800b },
+	//     ];
+	// 	navigator.usb.requestDevice({ 'filters': filters }).then(function(device){
+	// 	   console.log(device);
+	// 	});
+	// });
+
+	// const filters = [
+ //      { 'vendorId': 0x239a, 'productId': 0x800b },
+ //    ];
+	// navigator.usb.requestDevice({ 'filters': filters }).then(function(device){
+	//    console.log(device);
+	// });
+
+
+
+
+	
+
+
 	$(function() {
 		options1 = {
 			placement: "right",
@@ -168,9 +191,9 @@ jQuery(document).ready(function($){
 			scheduledReadTimeout = setTimeout(function() {
 				clearTimeout(scheduledReadInterval);
 				document.getElementById("scheduledReadInfo").className = "hidden";
-				}, scheduledReadTime2*60000 - 100);
-			};
+			}, scheduledReadTime2*60000 - 100);
 		};
+	};
 
 	$('#StopReadButton').on('click', function () {
 		$('#confirmCancelModal').modal('show');
@@ -650,70 +673,77 @@ jQuery(document).ready(function($){
 			(tubeAlertEnable[0] == false && tubeAlertEnable[1] == false && tubeAlertEnable[2] == false && tubeAlertEnable[3] == false) ||
 			(emailAlertEnable == false && phoneAlertEnable == false)
 
-		){
+			){
 			$('#invalidAlertSettingsModal').modal('show');
-		} else {
-			localStorage.setItem("alertTargetOD", targetVal);
-			localStorage.setItem("alertUserEmail", emailVal);
-			localStorage.setItem("alertUserPhoneNumber", phoneVal);
-			localStorage.setItem("alertUserProvider", providerVal);
-			notificationsConfigured = true;
-			$('#AlertSettingsSaveAlert').fadeIn(200);
-			$('#AlertSettingsSaveAlert').delay(2000).fadeOut(200);
-		}
-	};
+	} else {
+		localStorage.setItem("alertTargetOD", targetVal);
+		localStorage.setItem("alertUserEmail", emailVal);
+		localStorage.setItem("alertUserPhoneNumber", phoneVal);
+		localStorage.setItem("alertUserProvider", providerVal);
+		notificationsConfigured = true;
+		$('#AlertSettingsSaveAlert').fadeIn(200);
+		$('#AlertSettingsSaveAlert').delay(2000).fadeOut(200);
+	}
+};
 
 
-	$('#SendEmailButton').on('click', sendE);
-	function sendE(e) {
-		sendEmail(1, localStorage.getItem("alertTargetOD"), 'approach');
-	};
-	function sendEmail(targetTube, currentOD, type) {
-		alertString = String("Tube " + targetTube + " is currently at OD " + currentOD);
-		if (type == 'approach') alertString += ", approaching your target OD " + localStorage.getItem("alertTargetOD") + ".";
-		if (type == 'target') alertString += ", and has hit your target OD.";
+$('#SendEmailButton').on('click', sendE);
+function sendE(e) {
+	sendEmail(1, localStorage.getItem("alertTargetOD"), 'approach');
+};
+function sendEmail(targetTube, currentOD, type) {
+	alertString = String("Tube " + targetTube + " is currently at OD " + currentOD);
+	if (type == 'approach') alertString += ", approaching your target OD " + localStorage.getItem("alertTargetOD") + ".";
+	if (type == 'target') alertString += ", and has hit your target OD.";
 
-		Email.send("alerts@jensenlab.net",
-			String(localStorage.getItem("alertUserEmail")),
-			"JenTube Alert!",
-			alertString,
-			{token: "e61382df-687f-4fb4-9f8b-a92a53c69daf"}
+	Email.send("alerts@jensenlab.net",
+		String(localStorage.getItem("alertUserEmail")),
+		"JenTube Alert!",
+		alertString,
+		{token: "e61382df-687f-4fb4-9f8b-a92a53c69daf"}
 		);
-	};
+};
 
-	$('#SendTextButton').on('click', sendT);
-	function sendT(e) {
-		sendText(1, localStorage.getItem("alertTargetOD"), 'approach');
-	};
+$('#SendTextButton').on('click', sendT);
+function sendT(e) {
+	sendText(1, localStorage.getItem("alertTargetOD"), 'approach');
+};
 
-	function sendText(targetTube, currentOD, type) {
-		alertString = String("Tube " + targetTube + " is currently at OD " + currentOD);
-		if (type == 'approach') alertString += ", approaching your target OD " + localStorage.getItem("alertTargetOD") + ".";
-		if (type == 'target') alertString += ", and has hit your target OD.";
-		var provider = localStorage.getItem("alertUserProvider");
-		var addressToString = String(localStorage.getItem("alertUserPhoneNumber")) + "@";
-		
-		if (provider == "att") {addressToString += "txt.att.net"};
-		if (provider == "sprint") {addressToString += "messaging.sprintpcs.com"};
-		if (provider == "tmobile") {addressToString += "tmomail.net"};
-		if (provider == "verizon") {addressToString += "vtext.com"};
-		if (provider == "virgin") {addressToString += "vmobl.com"};
-		if (provider == "cricket") {addressToString += "sms.mycricket.com"};
-		if (provider == "boost") {addressToString += "sms.myboostmobile.com"};
-		if (provider == "alltel") {addressToString += "sms.alltelwireless.com"};
+function sendText(targetTube, currentOD, type) {
+	alertString = String("Tube " + targetTube + " is currently at OD " + currentOD);
+	if (type == 'approach') alertString += ", approaching your target OD " + localStorage.getItem("alertTargetOD") + ".";
+	if (type == 'target') alertString += ", and has hit your target OD.";
+	var provider = localStorage.getItem("alertUserProvider");
+	var addressToString = String(localStorage.getItem("alertUserPhoneNumber")) + "@";
+	
+	if (provider == "att") {addressToString += "txt.att.net"};
+	if (provider == "sprint") {addressToString += "messaging.sprintpcs.com"};
+	if (provider == "tmobile") {addressToString += "tmomail.net"};
+	if (provider == "verizon") {addressToString += "vtext.com"};
+	if (provider == "virgin") {addressToString += "vmobl.com"};
+	if (provider == "cricket") {addressToString += "sms.mycricket.com"};
+	if (provider == "boost") {addressToString += "sms.myboostmobile.com"};
+	if (provider == "alltel") {addressToString += "sms.alltelwireless.com"};
 		//alert('Tube ' + targetTube + ' is currently at OD' + target + ' to ' + addressToString);
 		Email.send("alerts@jensenlab.net",
 			addressToString,
 			"JenTube Alert!",
 			alertString,
 			{token: "e61382df-687f-4fb4-9f8b-a92a53c69daf"}
-		);
+			);
 
 	};
 	liveGraph();
 	
 
 });
+
+$('#startConnectionButton').on('click', StartSocket);
+function StartSocket(e) {
+	var connection = new WebSocket('ws://172.16.0.69:8000');
+	connection.onopen = function () {
+	  connection.send('Hey!'); // Send the message 'Ping' to the server
+};
 
 
 
