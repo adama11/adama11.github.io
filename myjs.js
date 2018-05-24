@@ -738,11 +738,12 @@ function sendText(targetTube, currentOD, type) {
 
 });
 
-$('#startConnectionButton').on('click', StartSocket);
-function StartSocket(e) {
-	var connection = new WebSocket('ws://172.16.0.69:8000');
-	connection.onopen = function () {
-	  connection.send('Hey!'); // Send the message 'Ping' to the server
+$('#startConnectionButton').on('click', startConnect);
+function startConnect(e) {
+	// var connection = new WebSocket('ws://172.16.0.69:8000');
+	// connection.onopen = function () {
+	//   connection.send('Hey!'); // Send the message 'Ping' to the server
+	var device = new Device(ip_address);
 };
 
 
