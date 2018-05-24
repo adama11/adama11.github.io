@@ -735,9 +735,6 @@ function sendText(targetTube, currentOD, type) {
 	};
 	liveGraph();
 	
-
-});
-
 $('#startConnectionButton').on('click', startConnect);
 function startConnect(e) {
 	// var connection = new WebSocket('ws://172.16.0.69:8000');
@@ -745,6 +742,8 @@ function startConnect(e) {
 	//   connection.send('Hey!'); // Send the message 'Ping' to the server
 	var device = new Device(ip_address);
 };
+
+});
 
 
 
